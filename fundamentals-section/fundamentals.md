@@ -6,7 +6,7 @@ The purpose of this section is to equip our listeners with all the knowledge the
 - At all points, we will know the type of our variables, and what behaviour they expose.
 - Dynamic typing is slower and the compiler avoids runtime errors and fatal error cases due to undefined behaviours.
 - The fmt package is part of the standard library and allows us to format and print strings.
-- The go toolchain builds and runs our programs.
+- The Go toolchain builds and runs our programs.
 
 [Playground](https://go.dev/play/p/DCh2szuTTbm)
 ```go
@@ -25,7 +25,7 @@ func main() {
 ## Functions
 - Go functions are natively supported and can be passed as variables, return types and parameters for later invocation. 
 - Anonymous functions are also allowed.
-- Function composition is easy to do in go. 
+- Function composition is easy to do in Go. 
 - Deferred functions are useful for guaranteed clean up tasks. 
 
 [Playground](https://go.dev/play/p/fDUKmkVvezv)
@@ -51,7 +51,7 @@ func main() {
 - Go is not an object oriented language, as it does not support type hierarchy. 
 - Structs allow us to build custom types and behaviours.
 - They are a collection of fields, which can be partially initialised.
-- Custom types can also methods with a special receiver argument that is the implicit first argument of the method.
+- Custom types can also define methods by using a special receiver argument that is the implicit first argument of the method.
 
 [Playground](https://go.dev/play/p/DDT86lbYhhz)
 ```go
@@ -77,7 +77,7 @@ func main() {
 
 ## Visibility
 - Go code is organised in packages, which control the visibility of the variables, types and functions they contain.
-- A folder may only contain a single package, but the package does not need to be named after the directory .
+- A folder may only contain a single package, but the package does not need to be named after the directory.
 - Names can only be used once inside the same package.
 - Runnable programs have a main function defined in a main package.
 - We can export fields outside their package by capitalising the first letter of their name. 
@@ -138,8 +138,8 @@ func main() {
 ```
 
 ## Goroutines
-- Goroutines are known as lightweight threads. They are used to functions concurrently inside our Go programs.
-- We instruct the Go runtime to run a function in a new goroutine by using the go keyword.
+- Goroutines are known as lightweight threads. They are used to run functions concurrently inside our Go programs.
+- We instruct the Go runtime to run a function in a new goroutine by using the `go` keyword.
 - Starting a goroutine is non-blocking by design, otherwise we'd be running things sequentially.
 - The program runs in its own goroutine, known as the main goroutine. 
 - The main goroutine has a parent child relationship with the goroutines it starts up.
@@ -236,7 +236,7 @@ func main() {
 
 ## Unit testing
 - Go's testing package allows us to write tests, verifications and benchmarks.
-- Coming from other languages, it might seems that Go's standard testing pacakage seems barebones.
+- Coming from other languages, it might seem that Go's standard testing package is barebones.
 - We can supplement it with other third-party libraries, but it's good to start with understanding how to write tests first.
 - Testing concurrent code cannot prove the absence of bugs, but it can give us a statistical confidence of our code's behaviour under certain conditions.
 
