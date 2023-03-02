@@ -1,4 +1,6 @@
-buildscripts: 
+generatescripts: 
 	gopherjs build frontend/scripts/scripts.go -o frontend/scripts/scripts.js
+buildfrontend:
+	go build -o frontend.exe ./frontend/main.go
 runfrontend:
-	go run frontend/main.go
+	make buildfrontend && ./frontend.exe
