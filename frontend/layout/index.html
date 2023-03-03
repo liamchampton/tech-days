@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Homepage</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+</head>
+
+<body>
+    <div class="container">
+        <h1 class="h2"> Welcome to the Microsoft Go Tech Days!</h1>
+        <button type="button" class="btn btn-primary" id="addRowBtn">Introduce yourself!</button>
+        <div class="container d-none bg-light" id="userInput">
+            <hr/>
+            <div class="input-group mb-3">
+                <span class="input-group-text">Name</span>
+                <input type="text" class="form-control" placeholder="Name" id="nameInput">
+            </div>
+            <div class="input-group mb-3">
+                <span class="input-group-text">Country </span>
+                <input type="text" class="form-control" placeholder="Country" id="countryInput">
+            </div>
+            <div class="input-group">
+                <span class="input-group-text">Fun fact</span>
+                <textarea class="form-control" id="funFactInput"></textarea>
+            </div>
+            <div class="container">
+                <div class="row my-3">
+                    <div class="col-md-12">
+                        <button type="button" class="btn btn-success px-3" id="submitBtn">Submit!</button>
+                        <button type="button" class="btn btn-danger px-3" id="cancelBtn">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr/>
+        <h2 class="h3"> Attendees</h2>
+        <table class="table" id="attendeeTable">
+            <thead>
+              <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Name</th>
+                <th scope="col">Country</th>
+                <th scope="col">Fun fact</th>
+              </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+        <button type="button" class="btn btn-secondary" id="refreshBtn">Refresh 🔄</button>
+        <script src="scripts.js"></script>
+    </div>
+</body>
+</html>
