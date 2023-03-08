@@ -71,6 +71,17 @@ func main() {
 		deletePerson(w, r, client)
 	})
 
+	http.HandleFunc("/person/getall", func(w http.ResponseWriter, r *http.Request) {
+		// switch r.Method {
+		// case "DELETE":
+		// 	deletePerson(w, r, client)
+		// default:
+		// 	http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		// }
+		log.Print("getAllPeople called")
+		getAllPeople(w, r, client)
+	})
+
 	// Start the HTTP server
 	port := os.Getenv("PORT")
 	if port == "" {
@@ -148,4 +159,33 @@ func deletePerson(w http.ResponseWriter, r *http.Request, client *mongo.Client) 
 
 	// Set the response status code to 204 No Content to indicate successful deletion
 	w.WriteHeader(http.StatusNoContent)
+}
+
+// getAllPeople returns all people documents from the database
+func getAllPeople(w http.ResponseWriter, r *http.Request, client *mongo.Client) {
+	// Get the MongoDB collection from the client
+	collection := client.Database(os.Getenv("MONGODB_DATABASE")).Collection(os.Getenv("MONGODB_COLLECTION"))
+
+	// Find all people documents in the collection
+	cursor, err := collection.Find(context.Background(), bson.D{})
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	defer cursor.Close(context.Background())
+
+	// Iterate through the cursor and decode each person document into a Person struct
+	var people []Person
+	for cursor.Next(context.Background()) {
+		var person Person
+		err = cursor.Decode(&person)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		people = append(people, person)
+	}
+
+	// Return the people slice as JSON
+	json.NewEncoder(w).Encode(people)
 }
