@@ -53,7 +53,7 @@ Call the API with curl:
 
 ```bash
 curl -X POST -H "Content-Type: application/json" -d '{
-    "id": "6408c132091d45f5fa24f0f5"
+    "id": "1234"
 }' localhost:8080/person/delete
 ```
 
