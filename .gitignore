@@ -4,6 +4,9 @@
 *.dll
 *.so
 *.dylib
+config
+*.js
+*.js.map
 
 # Test binary, built with `go test -c`
 *.test
