@@ -48,17 +48,6 @@ func main() {
 
 	fmt.Println("Connected to Cosmos DB MongoDB instance!")
 
-	// http.HandleFunc("/person", func(w http.ResponseWriter, r *http.Request) {
-	// 	switch r.Method {
-	// 	case "POST":
-	// 		createPerson(w, r, client)
-	// 	// case "DELETE":
-	// 	// 	deletePerson(w, r, client)
-	// 	default:
-	// 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
-	// 	}
-	// })
-
 	// http.HandleFunc("/person/{id}", func(w http.ResponseWriter, r *http.Request) {
 	// 	// switch r.Method {
 	// 	// case "POST":
@@ -80,22 +69,16 @@ func main() {
 			getAllPeople(w, r, client)
 		case "POST":
 			createPerson(w, r, client)
+		case "OPTIONS":
+			// Set necessary headers for handling CORS requests
+			w.Header().Set("Access-Control-Allow-Origin", "*")
+			w.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+			w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+			w.WriteHeader(http.StatusOK)
 		default:
 			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		}
 	})
-
-	// // Define a handler function for the "/person" endpoint
-	// http.HandleFunc("/person/create", func(w http.ResponseWriter, r *http.Request) {
-	// 	switch r.Method {
-	// 	case "POST":
-	// 		createPerson(w, r, client)
-	// 	// case "DELETE":
-	// 	// 	deletePerson(w, r, client)
-	// 	default:
-	// 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
-	// 	}
-	// })
 
 	http.HandleFunc("/person/delete", func(w http.ResponseWriter, r *http.Request) {
 		// switch r.Method {
