@@ -6,17 +6,17 @@
 go run main.go
 ```
 
-## Routes
+## RESTful Routes
 
-### GET /person/getall - Get all people
+### GET /persons - Get all people
 
 Call the API with curl:
 
 ```bash
-curl -X GET http://localhost:8080/person/getall
+curl -X GET http://localhost:8080/persons
 ```
 
-Returns:
+Returns a slice of JSON objects:
 
 ```json
 [
@@ -35,7 +35,7 @@ Returns:
 ]
 ```
 
-### POST /person/create - Create a person
+### POST /persons - Create a person
 
 Call the API with curl:
 
@@ -44,16 +44,16 @@ curl -X POST -H "Content-Type: application/json" -d '{
     "name": "Adelina Simion",
     "fact": "Likes coding",
     "location": "London"
-}' localhost:8080/person/create
+}' localhost:8080/persons
 ```
 
-### POST /person/delete - Delete a person
+### TODO: POST /person/{id} - Delete a person
 
 Call the API with curl:
 
 ```bash
 curl -X POST -H "Content-Type: application/json" -d '{
     "id": "1234"
-}' localhost:8080/person/delete
+}' localhost:8080/person/{id}
 ```
 
