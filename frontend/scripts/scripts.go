@@ -3,10 +3,20 @@ package main
 import (
 	"log"
 
+	_ "embed"
+
+	"github.com/liamchampton/tech-days/frontend/data"
 	"honnef.co/go/js/dom"
 )
 
+//go:embed config
+var backendURL string
+
 func main() {
+	ds, err := data.NewDataService(backendURL)
+	if err != nil {
+		log.Fatal(err)
+	}
 	document := dom.GetWindow().Document()
 	addRowBtn := document.GetElementByID("addRowBtn")
 	refreshBtn := document.GetElementByID("refreshBtn")
@@ -19,15 +29,34 @@ func main() {
 	})
 	cancelBtn := document.GetElementByID("cancelBtn")
 	cancelBtn.AddEventListener("click", true, func(e dom.Event) {
-		hideUserInput(document)	
+		hideUserInput(document)
 	})
 	submitBtn := document.GetElementByID("submitBtn")
 	submitBtn.AddEventListener("click", true, func(e dom.Event) {
-		addNewUser(document)
-		hideUserInput(document)		
+		name := document.GetElementByID("nameInput").(*dom.HTMLInputElement)
+		location := document.GetElementByID("locationInput").(*dom.HTMLInputElement)
+		funFact := document.GetElementByID("funFactInput").(*dom.HTMLTextAreaElement)
+		if err := ds.PostEntry(data.DataEntry{
+			Name:     name.Value,
+			Location: location.Value,
+			Fact:     funFact.Value,
+		}); err != nil {
+			log.Fatal(err)
+		}
+
+		hideUserInput(document)
 	})
 	refreshBtn.AddEventListener("click", true, func(e dom.Event) {
-		refreshBtn.SetTextContent("Refresh not implemented yet")
+		ds.GetEntries(func(d []data.DataEntry) {
+			table := document.GetElementByID("attendeeTable").GetElementsByTagName("tbody")[0]
+			ts := table.(*dom.HTMLTableSectionElement)
+			for i:= 0; i < len(ts.Rows()); i++ {
+				ts.DeleteRow(i)
+			}
+			for _, e := range d {
+				populateUser(ts, e)
+			}
+		})
 	})
 }
 
@@ -35,10 +64,10 @@ func hideUserInput(document dom.Document) {
 	userInput := document.GetElementByID("userInput")
 	userInput.Class().Add("d-none")
 	name := document.GetElementByID("nameInput").(*dom.HTMLInputElement)
-	country := document.GetElementByID("countryInput").(*dom.HTMLInputElement)
+	location := document.GetElementByID("locationInput").(*dom.HTMLInputElement)
 	funFact := document.GetElementByID("funFactInput").(*dom.HTMLTextAreaElement)
 	name.Value = ""
-	country.Value = ""
+	location.Value = ""
 	funFact.Value = ""
 }
 
@@ -47,15 +76,10 @@ func showUserInput(document dom.Document) {
 	userInput.Class().Remove("d-none")
 }
 
-func addNewUser(document dom.Document) {
-	name := document.GetElementByID("nameInput").(*dom.HTMLInputElement)
-	country := document.GetElementByID("countryInput").(*dom.HTMLInputElement)
-	funFact := document.GetElementByID("funFactInput").(*dom.HTMLTextAreaElement)
-	table := document.GetElementByID("attendeeTable").GetElementsByTagName("tbody")[0]
-	st := table.(*dom.HTMLTableSectionElement)
-	row := st.InsertRow(len(st.Rows()))
-	row.InsertCell(0).SetTextContent("xx")
-	row.InsertCell(1).SetTextContent(name.Value)
-	row.InsertCell(2).SetTextContent(country.Value)
-	row.InsertCell(3).SetTextContent(funFact.Value)
+func populateUser(tableSection *dom.HTMLTableSectionElement, entry data.DataEntry) {
+	row := tableSection.InsertRow(len(tableSection.Rows()))
+	row.InsertCell(0).SetTextContent(entry.ID)
+	row.InsertCell(1).SetTextContent(entry.Name)
+	row.InsertCell(2).SetTextContent(entry.Location)
+	row.InsertCell(3).SetTextContent(entry.Fact)
 }
