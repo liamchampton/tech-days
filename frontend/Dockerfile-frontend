@@ -1,0 +1,29 @@
+FROM golang:1.19.5-alpine3.17 as build
+
+ENV GOPATH /go
+
+ENV BACKEND_URL $BACKEND_URL
+
+WORKDIR $GOPATH/src/app
+
+COPY . .
+
+RUN apk add --no-cache make
+
+RUN go mod init
+
+RUN go mod download
+
+RUN go mod tidy
+
+RUN make buildfrontend
+
+RUN chmod +x frontend.exe
+
+FROM alpine:3.17
+
+COPY --from=build go/src/app/frontend.exe /
+
+EXPOSE 4321
+
+ENTRYPOINT [ "/frontend.exe" ]

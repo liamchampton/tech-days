@@ -40,5 +40,5 @@ func scriptsMapHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func faviconHandler(w http.ResponseWriter, r *http.Request) {
-	http.ServeFile(w, r, "./frontend/layout/favicon-techdays.ico")
+	http.ServeFile(w, r, "./frontend/layout/favicon.ico")
 }

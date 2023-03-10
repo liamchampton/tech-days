@@ -5,7 +5,11 @@ This is the repository for the [​"​Microsoft Tech Days: Learn Go on Azure"�
 The FE for this experimental application is built with Go & [GopherJS](https://github.com/gopherjs/gopherjs). GopherJS generates JavaScript from Go code and outputs it in the `/frontend/scripts` directory.
 
 ## Environment variables
-The FE requires the URL for the backend. This should be provided in the `frontend/scripts/config` file. 
+The FE requires the URL for the backend. This should be exported as:
+```
+$ export BACKEND_URL=XXX
+```
+Once this is exported, run `make generatescripts` for the frontend app to compile. 
 
 ### Build
 Run `make buildfrontend`. This command will create the runnable `frontend.exe` in the project root directory.
