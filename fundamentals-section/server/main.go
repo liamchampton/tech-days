@@ -48,17 +48,54 @@ func main() {
 
 	fmt.Println("Connected to Cosmos DB MongoDB instance!")
 
-	// Define a handler function for the "/person" endpoint
-	http.HandleFunc("/person/create", func(w http.ResponseWriter, r *http.Request) {
+	// http.HandleFunc("/person", func(w http.ResponseWriter, r *http.Request) {
+	// 	switch r.Method {
+	// 	case "POST":
+	// 		createPerson(w, r, client)
+	// 	// case "DELETE":
+	// 	// 	deletePerson(w, r, client)
+	// 	default:
+	// 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+	// 	}
+	// })
+
+	// http.HandleFunc("/person/{id}", func(w http.ResponseWriter, r *http.Request) {
+	// 	// switch r.Method {
+	// 	// case "POST":
+	// 	// 	createPerson(w, r, client)
+	// 	// // case "DELETE":
+	// 	// // 	deletePerson(w, r, client)
+	// 	// default:
+	// 	// 	http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+	// 	// }
+	// 	log.Print("getAllPeople called")
+	// 	getAllPeople(w, r, client)
+	// })
+
+	// GET /persons and POST /persons
+
+	http.HandleFunc("/persons", func(w http.ResponseWriter, r *http.Request) {
 		switch r.Method {
+		case "GET":
+			getAllPeople(w, r, client)
 		case "POST":
 			createPerson(w, r, client)
-		// case "DELETE":
-		// 	deletePerson(w, r, client)
 		default:
 			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		}
 	})
+
+	// // Define a handler function for the "/person" endpoint
+	// http.HandleFunc("/person/create", func(w http.ResponseWriter, r *http.Request) {
+	// 	switch r.Method {
+	// 	case "POST":
+	// 		createPerson(w, r, client)
+	// 	// case "DELETE":
+	// 	// 	deletePerson(w, r, client)
+	// 	default:
+	// 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+	// 	}
+	// })
 
 	http.HandleFunc("/person/delete", func(w http.ResponseWriter, r *http.Request) {
 		// switch r.Method {
@@ -71,16 +108,16 @@ func main() {
 		deletePerson(w, r, client)
 	})
 
-	http.HandleFunc("/person/getall", func(w http.ResponseWriter, r *http.Request) {
-		// switch r.Method {
-		// case "DELETE":
-		// 	deletePerson(w, r, client)
-		// default:
-		// 	http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
-		// }
-		log.Print("getAllPeople called")
-		getAllPeople(w, r, client)
-	})
+	// http.HandleFunc("/person/getall", func(w http.ResponseWriter, r *http.Request) {
+	// 	// switch r.Method {
+	// 	// case "DELETE":
+	// 	// 	deletePerson(w, r, client)
+	// 	// default:
+	// 	// 	http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+	// 	// }
+	// 	log.Print("getAllPeople called")
+	// 	getAllPeople(w, r, client)
+	// })
 
 	// Start the HTTP server
 	port := os.Getenv("PORT")
