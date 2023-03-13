@@ -49,16 +49,17 @@ func main() {
 	fmt.Println("Connected to Cosmos DB MongoDB instance!")
 
 	http.HandleFunc("/persons", func(w http.ResponseWriter, r *http.Request) {
+		// Set necessary headers for handling CORS requests
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+		w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+
 		switch r.Method {
 		case "GET":
 			getAllPeople(w, r, client)
 		case "POST":
 			createPerson(w, r, client)
 		case "OPTIONS":
-			// Set necessary headers for handling CORS requests
-			w.Header().Set("Access-Control-Allow-Origin", "*")
-			w.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
-			w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
 			w.WriteHeader(http.StatusOK)
 		default:
 			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
@@ -104,6 +105,7 @@ func createPerson(w http.ResponseWriter, r *http.Request, client *mongo.Client) 
 	}
 
 	// Set the response status code to 201 Created and return the newly created person's ID
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.WriteHeader(http.StatusCreated)
 	json.NewEncoder(w).Encode(struct{ ID string }{person.ID.Hex()})
 }
@@ -176,5 +178,6 @@ func getAllPeople(w http.ResponseWriter, r *http.Request, client *mongo.Client) 
 	}
 
 	// Return the people slice as JSON
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	json.NewEncoder(w).Encode(people)
 }

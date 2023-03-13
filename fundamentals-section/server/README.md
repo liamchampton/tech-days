@@ -1,4 +1,4 @@
-# Sever setup
+# Server setup
 
 ## Start the API server
 
