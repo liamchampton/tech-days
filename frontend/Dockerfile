@@ -21,10 +21,15 @@ RUN go install github.com/gopherjs/gopherjs@v1.18.0-beta2
 
 RUN make buildfrontend
 
-RUN chmod +x frontend.exe
+RUN chmod +x frontend
 
-RUN apk --no-cache add curl
+FROM alpine:3.17
+
+COPY --from=build go/src/app/layout /layout
+COPY --from=build go/src/app/scripts /scripts
+COPY --from=build go/src/app/data /data
+COPY --from=build go/src/app/frontend /
 
 EXPOSE 4321
 
-ENTRYPOINT [ "./frontend.exe" ]
+ENTRYPOINT [ "./frontend" ]
