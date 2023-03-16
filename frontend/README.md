@@ -25,5 +25,7 @@ Once changes to the `/frontend/scripts/scripts.go` are made, the JS files will n
 ```
 $ cd frontend
 $ docker build -f Dockerfile-frontend -t frontend --build-arg BACKEND_URL=$BACKEND_URL .
-$ docker run frontend -p 4321:4321
+$ docker run -dt -p 4321:4321/tcp frontend
 ```
+
+> NOTE: Use `--platform linux/amd64` in the docker build command when pushing to Azure.
