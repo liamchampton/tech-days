@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -13,8 +12,8 @@ func main() {
 	http.HandleFunc("/scripts.js", scriptsHandler)
 	http.HandleFunc("/scripts.js.map", scriptsMapHandler)
 	http.HandleFunc("/favicon.ico", faviconHandler)
-	fmt.Println("Listening on port 4321...")
-	http.ListenAndServe(":4321", nil)
+	log.Println("Listening on :4321...")
+	log.Fatal(http.ListenAndServe(":4321", nil))
 }
 
 func scriptsHandler(w http.ResponseWriter, r *http.Request) {

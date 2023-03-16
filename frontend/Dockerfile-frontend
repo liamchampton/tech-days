@@ -1,7 +1,8 @@
-FROM golang:1.19.5-alpine3.17 as build
+FROM golang:1.18.10-alpine3.17 as build
 
 ENV GOPATH /go
 
+ARG BACKEND_URL
 ENV BACKEND_URL $BACKEND_URL
 
 WORKDIR $GOPATH/src/app
@@ -10,20 +11,20 @@ COPY . .
 
 RUN apk add --no-cache make
 
-RUN go mod init
+RUN go mod init github.com/liamchampton/tech-days/frontend
 
 RUN go mod download
 
 RUN go mod tidy
 
+RUN go install github.com/gopherjs/gopherjs@v1.18.0-beta2
+
 RUN make buildfrontend
 
 RUN chmod +x frontend.exe
 
-FROM alpine:3.17
-
-COPY --from=build go/src/app/frontend.exe /
+RUN apk --no-cache add curl
 
 EXPOSE 4321
 
-ENTRYPOINT [ "/frontend.exe" ]
+ENTRYPOINT [ "./frontend.exe" ]
