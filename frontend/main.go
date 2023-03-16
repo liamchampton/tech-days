@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-	fs := http.FileServer(http.Dir("./frontend/layout"))
+	fs := http.FileServer(http.Dir("./layout"))
 	http.Handle("/", fs)
 	http.HandleFunc("/scripts.js", scriptsHandler)
 	http.HandleFunc("/scripts.js.map", scriptsMapHandler)
@@ -18,7 +18,7 @@ func main() {
 }
 
 func scriptsHandler(w http.ResponseWriter, r *http.Request) {
-	data, err := ioutil.ReadFile("./frontend/scripts/scripts.js")
+	data, err := ioutil.ReadFile("./scripts/scripts.js")
 	if err != nil {
 		log.Println(err)
 		http.Error(w, "Couldn't read file", http.StatusInternalServerError)
@@ -29,7 +29,7 @@ func scriptsHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func scriptsMapHandler(w http.ResponseWriter, r *http.Request) {
-	data, err := ioutil.ReadFile("./frontend/scripts/scripts.js.map")
+	data, err := ioutil.ReadFile("./scripts/scripts.js.map")
 	if err != nil {
 		log.Println(err)
 		http.Error(w, "Couldn't read file", http.StatusInternalServerError)
@@ -40,5 +40,5 @@ func scriptsMapHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func faviconHandler(w http.ResponseWriter, r *http.Request) {
-	http.ServeFile(w, r, "./frontend/layout/favicon.ico")
+	http.ServeFile(w, r, "./layout/favicon.ico")
 }
