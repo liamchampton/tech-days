@@ -81,7 +81,7 @@ func showUserInput(document dom.Document) {
 }
 
 func populateUser(tableSection *dom.HTMLTableSectionElement, entry data.DataEntry) {
-	row := tableSection.InsertRow(len(tableSection.Rows()))
+	row := tableSection.InsertRow(0)
 	row.InsertCell(0).SetTextContent(entry.Name)
 	row.InsertCell(1).SetTextContent(entry.Country)
 }
