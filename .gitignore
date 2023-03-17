@@ -5,6 +5,7 @@
 *.so
 *.dylib
 config
+*.env
 *.js
 *.js.map
 

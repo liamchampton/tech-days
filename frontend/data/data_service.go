@@ -5,11 +5,11 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
+	"math"
 	"net/http"
 )
 
 const DEFAULT_MAX_LENGTH = 30
-const FACT_MAX_LENGTH = 50
 
 type DataService struct {
 	url string
@@ -40,9 +40,8 @@ func (ds *DataService) GetEntries(callback func(d []DataEntry)) {
 }
 
 func (ds *DataService) PostEntry(d DataEntry) error {
-	d.Name = d.Name[0:DEFAULT_MAX_LENGTH]
-	d.Location = d.Location[0:DEFAULT_MAX_LENGTH]
-	d.Fact = d.Fact[0:FACT_MAX_LENGTH]
+	fl := math.Min(float64(len(d.Name)), DEFAULT_MAX_LENGTH)
+	d.Name = d.Name[0:int(fl)]
 	payload, err := json.Marshal(d)
 	if err != nil {
 		return fmt.Errorf("PostEntry:%v", err)

@@ -7,10 +7,8 @@ import (
 )
 
 type DataEntry struct {
-	ID       string `json:"id"`
 	Name     string `json:"name"`
-	Location string `json:"location"`
-	Fact     string `json:"fact"`
+	Country string `json:"location"`
 }
 
 func NewDataEntries(resp *http.Response) ([]DataEntry, error) {

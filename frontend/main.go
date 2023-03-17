@@ -1,24 +1,23 @@
 package main
 
 import (
-	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
 )
 
 func main() {
-	fs := http.FileServer(http.Dir("./frontend/layout"))
+	fs := http.FileServer(http.Dir("./layout"))
 	http.Handle("/", fs)
 	http.HandleFunc("/scripts.js", scriptsHandler)
 	http.HandleFunc("/scripts.js.map", scriptsMapHandler)
 	http.HandleFunc("/favicon.ico", faviconHandler)
-	fmt.Println("Listening on port 4321...")
-	http.ListenAndServe(":4321", nil)
+	log.Println("Listening on :4321...")
+	log.Fatal(http.ListenAndServe(":4321", nil))
 }
 
 func scriptsHandler(w http.ResponseWriter, r *http.Request) {
-	data, err := ioutil.ReadFile("./frontend/scripts/scripts.js")
+	data, err := ioutil.ReadFile("./scripts/scripts.js")
 	if err != nil {
 		log.Println(err)
 		http.Error(w, "Couldn't read file", http.StatusInternalServerError)
@@ -29,7 +28,7 @@ func scriptsHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func scriptsMapHandler(w http.ResponseWriter, r *http.Request) {
-	data, err := ioutil.ReadFile("./frontend/scripts/scripts.js.map")
+	data, err := ioutil.ReadFile("./scripts/scripts.js.map")
 	if err != nil {
 		log.Println(err)
 		http.Error(w, "Couldn't read file", http.StatusInternalServerError)
@@ -40,5 +39,5 @@ func scriptsMapHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func faviconHandler(w http.ResponseWriter, r *http.Request) {
-	http.ServeFile(w, r, "./frontend/layout/favicon-techdays.ico")
+	http.ServeFile(w, r, "./layout/favicon.ico")
 }

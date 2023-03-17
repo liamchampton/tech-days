@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"strings"
 
 	_ "embed"
 
@@ -13,7 +14,7 @@ import (
 var backendURL string
 
 func main() {
-	ds, err := data.NewDataService(backendURL)
+	ds, err := data.NewDataService(strings.TrimSpace(backendURL))
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -21,8 +22,7 @@ func main() {
 	addRowBtn := document.GetElementByID("addRowBtn")
 	refreshBtn := document.GetElementByID("refreshBtn")
 	if addRowBtn == nil || refreshBtn == nil {
-		log.Println("action buttons are nil ")
-		return
+		log.Fatal("action buttons are nil ")
 	}
 	addRowBtn.AddEventListener("click", true, func(e dom.Event) {
 		showUserInput(document)
@@ -33,30 +33,36 @@ func main() {
 	})
 	submitBtn := document.GetElementByID("submitBtn")
 	submitBtn.AddEventListener("click", true, func(e dom.Event) {
-		name := document.GetElementByID("nameInput").(*dom.HTMLInputElement)
-		location := document.GetElementByID("locationInput").(*dom.HTMLInputElement)
-		funFact := document.GetElementByID("funFactInput").(*dom.HTMLTextAreaElement)
-		if err := ds.PostEntry(data.DataEntry{
-			Name:     name.Value,
-			Location: location.Value,
-			Fact:     funFact.Value,
-		}); err != nil {
-			log.Fatal(err)
-		}
-
+		readUserInput(ds, document)
 		hideUserInput(document)
+		refreshEntries(ds, document)
 	})
 	refreshBtn.AddEventListener("click", true, func(e dom.Event) {
-		ds.GetEntries(func(d []data.DataEntry) {
-			table := document.GetElementByID("attendeeTable").GetElementsByTagName("tbody")[0]
-			ts := table.(*dom.HTMLTableSectionElement)
-			for i:= 0; i < len(ts.Rows()); i++ {
-				ts.DeleteRow(i)
-			}
-			for _, e := range d {
-				populateUser(ts, e)
-			}
-		})
+		refreshEntries(ds, document)
+	})
+}
+
+func readUserInput(ds *data.DataService, document dom.Document) {
+	name := document.GetElementByID("nameInput").(*dom.HTMLInputElement)
+	country := document.GetElementByID("countryInput").(*dom.HTMLInputElement)
+	if err := ds.PostEntry(data.DataEntry{
+		Name:    name.Value,
+		Country: country.Value,
+	}); err != nil {
+		log.Fatal(err)
+	}
+}
+
+func refreshEntries(ds *data.DataService, document dom.Document) {
+	ds.GetEntries(func(d []data.DataEntry) {
+		table := document.GetElementByID("attendeeTable").GetElementsByTagName("tbody")[0]
+		ts := table.(*dom.HTMLTableSectionElement)
+		for i := 0; i < len(ts.Rows()); i++ {
+			ts.DeleteRow(i)
+		}
+		for _, e := range d {
+			populateUser(ts, e)
+		}
 	})
 }
 
@@ -64,11 +70,9 @@ func hideUserInput(document dom.Document) {
 	userInput := document.GetElementByID("userInput")
 	userInput.Class().Add("d-none")
 	name := document.GetElementByID("nameInput").(*dom.HTMLInputElement)
-	location := document.GetElementByID("locationInput").(*dom.HTMLInputElement)
-	funFact := document.GetElementByID("funFactInput").(*dom.HTMLTextAreaElement)
+	country := document.GetElementByID("countryInput").(*dom.HTMLInputElement)
 	name.Value = ""
-	location.Value = ""
-	funFact.Value = ""
+	country.Value = ""
 }
 
 func showUserInput(document dom.Document) {
@@ -77,9 +81,7 @@ func showUserInput(document dom.Document) {
 }
 
 func populateUser(tableSection *dom.HTMLTableSectionElement, entry data.DataEntry) {
-	row := tableSection.InsertRow(len(tableSection.Rows()))
-	row.InsertCell(0).SetTextContent(entry.ID)
-	row.InsertCell(1).SetTextContent(entry.Name)
-	row.InsertCell(2).SetTextContent(entry.Location)
-	row.InsertCell(3).SetTextContent(entry.Fact)
+	row := tableSection.InsertRow(0)
+	row.InsertCell(0).SetTextContent(entry.Name)
+	row.InsertCell(1).SetTextContent(entry.Country)
 }
