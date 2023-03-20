@@ -40,6 +40,7 @@ func (ds *DataService) GetEntries(callback func(d []DataEntry)) {
 }
 
 func (ds *DataService) PostEntry(d DataEntry) error {
+	log.Printf("PostEntry:%v\n", d)
 	fl := math.Min(float64(len(d.Name)), DEFAULT_MAX_LENGTH)
 	d.Name = d.Name[0:int(fl)]
 	payload, err := json.Marshal(d)

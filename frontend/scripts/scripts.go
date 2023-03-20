@@ -13,11 +13,15 @@ import (
 //go:embed config
 var backendURL string
 
+//go:embed countries
+var countriesInput string
+
 func main() {
 	ds, err := data.NewDataService(strings.TrimSpace(backendURL))
 	if err != nil {
 		log.Fatal(err)
 	}
+	countries := strings.Split(countriesInput, "\n")
 	document := dom.GetWindow().Document()
 	addRowBtn := document.GetElementByID("addRowBtn")
 	refreshBtn := document.GetElementByID("refreshBtn")
@@ -27,6 +31,7 @@ func main() {
 	addRowBtn.AddEventListener("click", true, func(e dom.Event) {
 		showUserInput(document)
 	})
+	populateCountries(document, countries)
 	cancelBtn := document.GetElementByID("cancelBtn")
 	cancelBtn.AddEventListener("click", true, func(e dom.Event) {
 		hideUserInput(document)
@@ -42,12 +47,22 @@ func main() {
 	})
 }
 
+func populateCountries(document dom.Document, countries []string) {
+	selEl := document.GetElementByID("countryDropdown").(*dom.HTMLSelectElement)
+	for _, c := range countries {
+		o := document.CreateElement("option")
+		o.SetTextContent(c)
+		selEl.AppendChild(o)
+	}
+}
+
 func readUserInput(ds *data.DataService, document dom.Document) {
 	name := document.GetElementByID("nameInput").(*dom.HTMLInputElement)
-	country := document.GetElementByID("countryInput").(*dom.HTMLInputElement)
+	countrySelection := document.GetElementByID("countryDropdown").(*dom.HTMLSelectElement)
+	countryElement := countrySelection.Options()[countrySelection.SelectedIndex]
 	if err := ds.PostEntry(data.DataEntry{
 		Name:    name.Value,
-		Country: country.Value,
+		Country: countryElement.Text,
 	}); err != nil {
 		log.Fatal(err)
 	}
@@ -70,9 +85,9 @@ func hideUserInput(document dom.Document) {
 	userInput := document.GetElementByID("userInput")
 	userInput.Class().Add("d-none")
 	name := document.GetElementByID("nameInput").(*dom.HTMLInputElement)
-	country := document.GetElementByID("countryInput").(*dom.HTMLInputElement)
+	countrySelection := document.GetElementByID("countryDropdown").(*dom.HTMLSelectElement)
 	name.Value = ""
-	country.Value = ""
+	countrySelection.SelectedIndex = 0
 }
 
 func showUserInput(document dom.Document) {
