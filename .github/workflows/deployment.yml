@@ -31,5 +31,5 @@ jobs:
           password: ${{ secrets.ACR_PASSWORD }}
 
       - run: |
-          docker build --file ./server/Dockerfile -t ${{ env.SERVER }}/${{ env.IMAGE }}:${{ env.TAG }}
+          docker build . -t ${{ env.SERVER }}/${{ env.IMAGE }}:${{ env.TAG }}
           docker push ${{ env.SERVER }}/${{ env.IMAGE }}:${{ env.TAG }}
