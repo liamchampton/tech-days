@@ -83,32 +83,32 @@ func main() {
 
 // createPerson creates a new person document in the database
 func createPerson(w http.ResponseWriter, r *http.Request, client *mongo.Client) {
-	// Parse the request body into a Person struct
-	var person Person
-	err := json.NewDecoder(r.Body).Decode(&person)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
-		return
-	}
+	// // Parse the request body into a Person struct
+	// var person Person
+	// err := json.NewDecoder(r.Body).Decode(&person)
+	// if err != nil {
+	// 	http.Error(w, err.Error(), http.StatusBadRequest)
+	// 	return
+	// }
 
-	// Set the ID field to a new unique ID
-	person.ID = primitive.NewObjectID()
+	// // Set the ID field to a new unique ID
+	// person.ID = primitive.NewObjectID()
 
-	// Get the MongoDB collection from the client
-	collection := client.Database(os.Getenv("MONGODB_DATABASE")).Collection(os.Getenv("MONGODB_COLLECTION"))
+	// // Get the MongoDB collection from the client
+	// collection := client.Database(os.Getenv("MONGODB_DATABASE")).Collection(os.Getenv("MONGODB_COLLECTION"))
 
-	// Insert the new person document into the collection
-	_, err = collection.InsertOne(context.Background(), &person)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
+	// // Insert the new person document into the collection
+	// _, err = collection.InsertOne(context.Background(), &person)
+	// if err != nil {
+	// 	http.Error(w, err.Error(), http.StatusInternalServerError)
+	// 	return
+	// }
 
-	// Set the response status code to 201 Created and return the newly created person's ID
-	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-	w.WriteHeader(http.StatusCreated)
-	json.NewEncoder(w).Encode(struct{ ID string }{person.ID.Hex()})
-	// json.NewEncoder(w).Encode(map[string]string{"message": "Route not implemented yet"})
+	// // Set the response status code to 201 Created and return the newly created person's ID
+	// w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	// w.WriteHeader(http.StatusCreated)
+	// json.NewEncoder(w).Encode(struct{ ID string }{person.ID.Hex()})
+	json.NewEncoder(w).Encode(map[string]string{"message": "Route not implemented yet"})
 }
 
 // deletePerson deletes a person document from the database
