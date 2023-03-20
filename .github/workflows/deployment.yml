@@ -9,7 +9,7 @@ on:
 env:
   TAG: v1
   SERVER: techdaysdemoregistry.azurecr.io
-  IMAGE: doa-ep1
+  IMAGE: techdaysdemocontainer
 
 jobs:
   build:
