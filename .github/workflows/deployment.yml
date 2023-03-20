@@ -3,7 +3,7 @@ name: Build a Docker image and push it to ACR
 on:
   push: 
     branches: [main]
-    paths: ['./server/**']
+    # paths: ['./server/**']
 
   workflow_dispatch:
 
@@ -25,11 +25,11 @@ jobs:
 
       - uses: azure/docker-login@v1
         with:
-          context: ./server/
           login-server: ${{ env.SERVER }}
           username: ${{ secrets.ACR_USERNAME }}
           password: ${{ secrets.ACR_PASSWORD }}
 
       - run: |
+          cd server
           docker build . -t ${{ env.SERVER }}/${{ env.IMAGE }}:${{ env.TAG }}
           docker push ${{ env.SERVER }}/${{ env.IMAGE }}:${{ env.TAG }}
