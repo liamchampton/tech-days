@@ -1,0 +1,35 @@
+name: Build a Docker image and push it to ACR
+
+on:
+  push: 
+    branches: [main]
+    paths: ['./server/**']
+
+  workflow_dispatch:
+
+env:
+  TAG: v1
+  SERVER: techdaysdemoregistry.azurecr.io
+  IMAGE: techdaysdemocontainer
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.18
+
+      - uses: azure/docker-login@v1
+        with:
+          context: ./server/
+          login-server: ${{ env.SERVER }}
+          username: ${{ secrets.ACR_USERNAME }}
+          password: ${{ secrets.ACR_PASSWORD }}
+
+      - run: |
+          docker build . -t ${{ env.SERVER }}/${{ env.IMAGE }}:${{ env.TAG }}
+          docker push ${{ env.SERVER }}/${{ env.IMAGE }}:${{ env.TAG }}
