@@ -9,6 +9,7 @@ import (
 	"os"
 	"time"
 
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -112,70 +113,70 @@ func createPerson(w http.ResponseWriter, r *http.Request, client *mongo.Client) 
 
 // deletePerson deletes a person document from the database
 func deletePerson(w http.ResponseWriter, r *http.Request, client *mongo.Client) {
-	// 	// Read the request body
-	// 	decoder := json.NewDecoder(r.Body)
-	// 	var data struct {
-	// 		ID string `json:"id"`
-	// 	}
-	// 	if err := decoder.Decode(&data); err != nil {
-	// 		http.Error(w, err.Error(), http.StatusBadRequest)
-	// 		return
-	// 	}
+	// Read the request body
+	decoder := json.NewDecoder(r.Body)
+	var data struct {
+		ID string `json:"id"`
+	}
+	if err := decoder.Decode(&data); err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
 
-	// 	// Validate the ID parameter
-	// 	if data.ID == "" {
-	// 		http.Error(w, "ID parameter is missing", http.StatusBadRequest)
-	// 		return
-	// 	}
-	// 	id, err := primitive.ObjectIDFromHex(data.ID)
-	// 	if err != nil {
-	// 		http.Error(w, "Invalid ID parameter", http.StatusBadRequest)
-	// 		return
-	// 	}
+	// Validate the ID parameter
+	if data.ID == "" {
+		http.Error(w, "ID parameter is missing", http.StatusBadRequest)
+		return
+	}
+	id, err := primitive.ObjectIDFromHex(data.ID)
+	if err != nil {
+		http.Error(w, "Invalid ID parameter", http.StatusBadRequest)
+		return
+	}
 
-	// 	// Get the MongoDB collection from the client
-	// 	collection := client.Database(os.Getenv("MONGODB_DATABASE")).Collection(os.Getenv("MONGODB_COLLECTION"))
+	// Get the MongoDB collection from the client
+	collection := client.Database(os.Getenv("MONGODB_DATABASE")).Collection(os.Getenv("MONGODB_COLLECTION"))
 
-	// 	// Delete the person document with the specified ID
-	// 	filter := bson.M{"_id": id}
-	// 	result, err := collection.DeleteOne(context.Background(), filter)
-	// 	if err != nil {
-	// 		http.Error(w, err.Error(), http.StatusInternalServerError)
-	// 		return
-	// 	}
-	// 	if result.DeletedCount == 0 {
-	// 		http.Error(w, "Person document not found", http.StatusNotFound)
-	// 		return
-	// 	}
+	// Delete the person document with the specified ID
+	filter := bson.M{"_id": id}
+	result, err := collection.DeleteOne(context.Background(), filter)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	if result.DeletedCount == 0 {
+		http.Error(w, "Person document not found", http.StatusNotFound)
+		return
+	}
 
-	// 	// Set the response status code to 204 No Content to indicate successful deletion
-	// 	w.WriteHeader(http.StatusNoContent)
+	// Set the response status code to 204 No Content to indicate successful deletion
+	w.WriteHeader(http.StatusNoContent)
+}
+
+// getAllPeople returns all people documents from the database
+func getAllPeople(w http.ResponseWriter, r *http.Request, client *mongo.Client) {
+	// // Get the MongoDB collection from the client
+	// collection := client.Database(os.Getenv("MONGODB_DATABASE")).Collection(os.Getenv("MONGODB_COLLECTION"))
+
+	// // Find all people documents in the collection
+	// cursor, err := collection.Find(context.Background(), bson.D{})
+	// if err != nil {
+	// 	http.Error(w, err.Error(), http.StatusInternalServerError)
+	// 	return
 	// }
+	// defer cursor.Close(context.Background())
 
-	// // getAllPeople returns all people documents from the database
-	// func getAllPeople(w http.ResponseWriter, r *http.Request, client *mongo.Client) {
-	// 	// Get the MongoDB collection from the client
-	// 	collection := client.Database(os.Getenv("MONGODB_DATABASE")).Collection(os.Getenv("MONGODB_COLLECTION"))
-
-	// 	// Find all people documents in the collection
-	// 	cursor, err := collection.Find(context.Background(), bson.D{})
+	// // Iterate through the cursor and decode each person document into a Person struct
+	// var people []Person
+	// for cursor.Next(context.Background()) {
+	// 	var person Person
+	// 	err = cursor.Decode(&person)
 	// 	if err != nil {
 	// 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	// 		return
 	// 	}
-	// 	defer cursor.Close(context.Background())
-
-	// 	// Iterate through the cursor and decode each person document into a Person struct
-	// 	var people []Person
-	// 	for cursor.Next(context.Background()) {
-	// 		var person Person
-	// 		err = cursor.Decode(&person)
-	// 		if err != nil {
-	// 			http.Error(w, err.Error(), http.StatusInternalServerError)
-	// 			return
-	// 		}
-	// 		people = append(people, person)
-	// 	}
+	// 	people = append(people, person)
+	// }
 
 	// // Return the people slice as JSON
 	// w.Header().Set("Content-Type", "application/json; charset=UTF-8")
