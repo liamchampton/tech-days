@@ -155,31 +155,31 @@ func deletePerson(w http.ResponseWriter, r *http.Request, client *mongo.Client) 
 
 // getAllPeople returns all people documents from the database
 func getAllPeople(w http.ResponseWriter, r *http.Request, client *mongo.Client) {
-	// Get the MongoDB collection from the client
-	collection := client.Database(os.Getenv("MONGODB_DATABASE")).Collection(os.Getenv("MONGODB_COLLECTION"))
+	// // Get the MongoDB collection from the client
+	// collection := client.Database(os.Getenv("MONGODB_DATABASE")).Collection(os.Getenv("MONGODB_COLLECTION"))
 
-	// Find all people documents in the collection
-	cursor, err := collection.Find(context.Background(), bson.D{})
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-	defer cursor.Close(context.Background())
+	// // Find all people documents in the collection
+	// cursor, err := collection.Find(context.Background(), bson.D{})
+	// if err != nil {
+	// 	http.Error(w, err.Error(), http.StatusInternalServerError)
+	// 	return
+	// }
+	// defer cursor.Close(context.Background())
 
-	// Iterate through the cursor and decode each person document into a Person struct
-	var people []Person
-	for cursor.Next(context.Background()) {
-		var person Person
-		err = cursor.Decode(&person)
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-		people = append(people, person)
-	}
+	// // Iterate through the cursor and decode each person document into a Person struct
+	// var people []Person
+	// for cursor.Next(context.Background()) {
+	// 	var person Person
+	// 	err = cursor.Decode(&person)
+	// 	if err != nil {
+	// 		http.Error(w, err.Error(), http.StatusInternalServerError)
+	// 		return
+	// 	}
+	// 	people = append(people, person)
+	// }
 
-	// Return the people slice as JSON
-	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-	json.NewEncoder(w).Encode(people)
-	// json.NewEncoder(w).Encode(map[string]string{"message": "Route not implemented yet"})
+	// // Return the people slice as JSON
+	// w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	// json.NewEncoder(w).Encode(people)
+	json.NewEncoder(w).Encode(map[string]string{"message": "Route not implemented yet"})
 }
