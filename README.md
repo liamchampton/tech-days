@@ -4,4 +4,4 @@ This is the repository for the [​"​Microsoft Tech Days: Learn Go on Azure"�
 This repository contains: 
 - [Frontend client code](/frontend/)
 - [Server code](/server/)
-- [Demo code](/fundamentals-section/) for demonstration of the core Go concepts
+- [Demo code](/fundamentals/) for demonstration of the core Go concepts
