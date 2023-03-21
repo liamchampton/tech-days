@@ -24,8 +24,9 @@ func main() {
 	countries := strings.Split(countriesInput, "\n")
 	document := dom.GetWindow().Document()
 	addRowBtn := document.GetElementByID("addRowBtn")
-	refreshBtn := document.GetElementByID("refreshBtn")
-	if addRowBtn == nil || refreshBtn == nil {
+	refreshBtnTop := document.GetElementByID("refreshBtn-top")
+	refreshBtnBottom := document.GetElementByID("refreshBtn-bottom")
+	if addRowBtn == nil || refreshBtnTop == nil || refreshBtnBottom == nil {
 		log.Fatal("action buttons are nil ")
 	}
 	addRowBtn.AddEventListener("click", true, func(e dom.Event) {
@@ -42,7 +43,11 @@ func main() {
 		hideUserInput(document)
 		refreshEntries(ds, document)
 	})
-	refreshBtn.AddEventListener("click", true, func(e dom.Event) {
+	refreshBtnTop.AddEventListener("click", true, func(e dom.Event) {
+		refreshEntries(ds, document)
+		refreshBtnBottom.Class().Remove("d-none")
+	})
+	refreshBtnBottom.AddEventListener("click", true, func(e dom.Event) {
 		refreshEntries(ds, document)
 	})
 }
@@ -70,14 +75,13 @@ func readUserInput(ds *data.DataService, document dom.Document) {
 
 func refreshEntries(ds *data.DataService, document dom.Document) {
 	ds.GetEntries(func(d []data.DataEntry) {
-		table := document.GetElementByID("attendeeTable").GetElementsByTagName("tbody")[0]
-		ts := table.(*dom.HTMLTableSectionElement)
-		for i := 0; i < len(ts.Rows()); i++ {
-			ts.DeleteRow(i)
-		}
+		newBody := document.CreateElement("tbody")
+		ts := newBody.(*dom.HTMLTableSectionElement)
 		for _, e := range d {
 			populateUser(ts, e)
 		}
+		oldBody := document.GetElementByID("attendeeTable").GetElementsByTagName("tbody")[0]
+		document.GetElementByID("attendeeTable").ReplaceChild(newBody, oldBody)
 	})
 }
 
